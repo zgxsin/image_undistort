@@ -1,0 +1,9 @@
+cam0:
+  cam_overlaps: []
+  camera_model: pinhole
+  distortion_coeffs: [-0.014058224884945977, 0.01482346257667026, -0.01583259218609145,
+    0.003993516609035747]
+  distortion_model: equidistant
+  intrinsics: [625.0782424989687, 626.2882838971248, 625.751266284961, 505.7339554025485]
+  resolution: [1280, 1024]
+  rostopic: /blackfly_front/image_raw_throttle
