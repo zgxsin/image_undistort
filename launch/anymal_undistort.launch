@@ -1,0 +1,44 @@
+<launch>
+
+  <!--decomppress /blackfly_front/image_color/compressed -->
+  <node name="decompress_front_camera_color" type="republish" pkg="image_transport" output="screen"
+        args="compressed in:=/blackfly_front/image_color
+                     raw out:=/blackfly_front/image_color"/>
+  <!--decomppress /blackfly_rear/image_color/compressed -->
+  <node name="decompress_rear_camera_color" type="republish" pkg="image_transport" output="screen"
+        args="compressed in:=/blackfly_rear/image_color
+                     raw out:=/blackfly_rear/image_color"/>
+  <arg name="calib_path_front_camera"         default="$(find image_undistort)/cfg/camchain_anymal_chap_front_camera.yaml"/>
+  <arg name="calib_path_rear_camera"          default="$(find image_undistort)/cfg/camchain_anymal_chap_rear_camera.yaml"/>
+  <node name="image_undistort_node_front" pkg="image_undistort" type="image_undistort_node">
+    <param name="input_camera_namespace"                value="cam0"/>
+    <param name="publish_tf"                            value="false"/>
+    <param name="output_frame"                          value="blackfly_front_camera_parent"/>
+    <param name="input_camera_info_from_ros_params"     value = "true"/>
+    <param name="scale"                                 value="1.0"/>
+    <param name="output_camera_info_source"             value="match_input"/>
+    <param name="rename_radtan_plumb_bob"               value="true"/>
+    <rosparam file="$(find image_undistort)/cfg/camchain_anymal_chap_front_camera.yaml"/>
+    <remap from="input/image"                           to="blackfly_front/image_color"/>
+    <remap from="input/camera_info"                     to="blackfly_front/camera_info"/>
+    <remap from="output/image"                          to="blackfly_front_asl/image_color_rect"/>
+    <remap from="output/camera_info"                    to="blackfly_front_asl/camera_info"/>
+  </node>
+
+  <node name="image_undistort_node_rear" pkg="image_undistort" type="image_undistort_node">
+    <param name="input_camera_namespace"                value="cam0"/>
+    <param name="publish_tf"                            value="false"/>
+    <param name="output_frame"                          value="blackfly_rear_camera_parent"/>
+    <param name="input_camera_info_from_ros_params"     value = "true"/>
+    <param name="scale"                                 value="1.0"/>
+    <param name="output_camera_info_source"             value="match_input"/>
+    <param name="rename_radtan_plumb_bob"               value="true"/>
+    <rosparam file="$(find image_undistort)/cfg/camchain_anymal_chap_rear_camera.yaml"/>
+    <remap from="input/image"                           to="blackfly_rear/image_color"/>
+    <remap from="input/camera_info"                     to="blackfly_rear/camera_info"/>
+    <remap from="output/image"                          to="blackfly_rear_asl/image_color_rect"/>
+    <remap from="output/camera_info"                    to="blackfly_rear_asl/camera_info"/>
+  </node>
+
+
+</launch>
